@@ -77,14 +77,14 @@ final class UrlSanitizer
      * Parses a given URL and returns an array of its components.
      *
      * @return null|array{
-     *     scheme:?string,
-     *     user:?string,
-     *     pass:?string,
-     *     host:?string,
-     *     port:?int,
-     *     path:string,
-     *     query:?string,
-     *     fragment:?string
+     *     scheme?: string,
+     *     user?: string,
+     *     pass?: string,
+     *     host?: string,
+     *     port?: int,
+     *     path: string,
+     *     query?: string,
+     *     fragment?: string
      * }
      */
     public static function parse(string $url): ?array
