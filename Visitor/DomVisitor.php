@@ -80,7 +80,7 @@ final class DomVisitor
         $this->defaultAction = $config->getDefaultAction();
     }
 
-    public function visit(\DOMDocumentFragment $domNode): ?NodeInterface
+    public function visit(\DOMNode $domNode): ?NodeInterface
     {
         $cursor = new Cursor(new DocumentNode());
         $this->visitChildren($domNode, $cursor);
