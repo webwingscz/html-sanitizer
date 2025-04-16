@@ -34,7 +34,8 @@ use Symfony\Component\HtmlSanitizer\Visitor\Node\TextNode;
  */
 final class DomVisitor
 {
-    private HtmlSanitizerAction $defaultAction = HtmlSanitizerAction::Drop;
+    /** @var string&HtmlSanitizerAction::* */
+    private string $defaultAction = HtmlSanitizerAction::Drop;
 
     /**
      * Registry of attributes to forcefully set on nodes, index by element and attribute.
@@ -50,18 +51,22 @@ final class DomVisitor
      * @var array<string, array<string, list<AttributeSanitizerInterface>>>
      */
     private array $attributeSanitizers = [];
+    private HtmlSanitizerConfig $config;
+    private array $elementsConfig;
 
     /**
-     * @param array<string, HtmlSanitizerAction|array<string, bool>> $elementsConfig Registry of allowed/blocked elements:
+     * @param array<string, HtmlSanitizerAction::*|array<string, bool>> $elementsConfig Registry of allowed/blocked elements:
      *                                                                               * If an element is present as a key and contains an array, the element should be allowed
      *                                                                               and the array is the list of allowed attributes.
      *                                                                               * If an element is present as a key and contains an HtmlSanitizerAction, that action applies.
      *                                                                               * If an element is not present as a key, the default action applies.
      */
     public function __construct(
-        private HtmlSanitizerConfig $config,
-        private array $elementsConfig,
+        HtmlSanitizerConfig $config,
+        array $elementsConfig
     ) {
+        $this->elementsConfig = $elementsConfig;
+        $this->config = $config;
         $this->forcedAttributes = $config->getForcedAttributes();
 
         foreach ($config->getAttributeSanitizers() as $attributeSanitizer) {
@@ -160,7 +165,7 @@ final class DomVisitor
     private function setAttributes(string $domNodeName, \DOMNode $domNode, Node $node, array $allowedAttributes = []): void
     {
         /** @var iterable<\DOMAttr> $domAttributes */
-        if (!$domAttributes = $domNode->attributes ? $domNode->attributes->getIterator() : []) {
+        if (!$domAttributes = $domNode->attributes ? new \IteratorIterator($domNode->attributes) : []) {
             return;
         }
 

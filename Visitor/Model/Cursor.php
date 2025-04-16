@@ -20,7 +20,10 @@ use Symfony\Component\HtmlSanitizer\Visitor\Node\NodeInterface;
  */
 final class Cursor
 {
-    public function __construct(public ?NodeInterface $node)
+    public ?NodeInterface $node;
+
+    public function __construct(?NodeInterface $node)
     {
+        $this->node = $node;
     }
 }

@@ -18,8 +18,13 @@ use Symfony\Component\HtmlSanitizer\TextSanitizer\StringSanitizer;
  */
 final class TextNode implements NodeInterface
 {
-    public function __construct(private NodeInterface $parentNode, private string $text)
+    private NodeInterface $parentNode;
+    private string $text;
+
+    public function __construct(NodeInterface $parentNode, string $text)
     {
+        $this->text = $text;
+        $this->parentNode = $parentNode;
     }
 
     public function addChild(NodeInterface $node): void

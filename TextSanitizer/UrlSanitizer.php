@@ -105,7 +105,7 @@ final class UrlSanitizer
             }
 
             return $parsedUrl;
-        } catch (SyntaxError) {
+        } catch (SyntaxError $e) {
             return null;
         }
     }

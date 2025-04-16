@@ -18,8 +18,11 @@ use Masterminds\HTML5;
  */
 final class MastermindsParser implements ParserInterface
 {
-    public function __construct(private array $defaultOptions = [])
+    private array $defaultOptions = [];
+
+    public function __construct(array $defaultOptions = [])
     {
+        $this->defaultOptions = $defaultOptions;
     }
 
     public function parse(string $html): ?\DOMNode

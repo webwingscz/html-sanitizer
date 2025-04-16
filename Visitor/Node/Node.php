@@ -39,11 +39,15 @@ final class Node implements NodeInterface
 
     private array $attributes = [];
     private array $children = [];
+    private NodeInterface $parent;
+    private string $tagName;
 
     public function __construct(
-        private NodeInterface $parent,
-        private string $tagName,
+        NodeInterface $parent,
+        string $tagName
     ) {
+        $this->tagName = $tagName;
+        $this->parent = $parent;
     }
 
     public function getParent(): ?NodeInterface
@@ -106,7 +110,7 @@ final class Node implements NodeInterface
                 // IE8's HTML parser treats `` as a blank attribute value and foo=bar becomes a separate attribute.
                 // Adding a space at the end of the attribute prevents this by forcing IE8 to put double
                 // quotes around the attribute when computing nodeB.innerHTML.
-                if (str_contains($value, '`')) {
+                if (false !== strpos($value, '`')) {
                     $value .= ' ';
                 }
 

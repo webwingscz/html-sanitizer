@@ -28,10 +28,11 @@ final class HtmlSanitizer implements HtmlSanitizerInterface
      * @var array<string, DomVisitor>
      */
     private array $domVisitors = [];
+    private HtmlSanitizerConfig $config;
 
     public function __construct(
-        private HtmlSanitizerConfig $config,
-        ?ParserInterface $parser = null,
+        HtmlSanitizerConfig $config,
+        ?ParserInterface $parser = null
     ) {
         $this->config = $config;
         $this->parser = $parser ?? new MastermindsParser();
@@ -80,7 +81,9 @@ final class HtmlSanitizer implements HtmlSanitizerInterface
         }
 
         // Visit the DOM tree and render the sanitized nodes
-        return $this->domVisitors[$context]->visit($parsed)?->render() ?? '';
+        $node = $this->domVisitors[$context]->visit($parsed);
+
+        return ($node !== null ? $node->render() : null) ?? '';
     }
 
     private function isValidUtf8(string $html): bool

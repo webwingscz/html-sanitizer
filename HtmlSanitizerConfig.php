@@ -19,7 +19,8 @@ use Symfony\Component\HtmlSanitizer\Visitor\AttributeSanitizer\AttributeSanitize
  */
 class HtmlSanitizerConfig
 {
-    private HtmlSanitizerAction $defaultAction = HtmlSanitizerAction::Drop;
+    /** @var string&HtmlSanitizerAction::* */
+    private string $defaultAction = HtmlSanitizerAction::Drop;
 
     /**
      * Elements that should be removed.
@@ -112,8 +113,11 @@ class HtmlSanitizerConfig
      * Sets the default action for elements which are not otherwise specifically allowed or blocked.
      *
      * Note that a default action of Allow will allow all tags but they will not have any attributes.
+     *
+     * @param string&HtmlSanitizerAction::* $action
+     * @return static
      */
-    public function defaultAction(HtmlSanitizerAction $action): static
+    public function defaultAction(string $action): self
     {
         $clone = clone $this;
         $clone->defaultAction = $action;
@@ -126,8 +130,10 @@ class HtmlSanitizerConfig
      *
      * All scripts will be removed but the output may still contain other dangerous
      * behaviors like CSS injection (click-jacking), CSS expressions, ...
+     *
+     * @return static
      */
-    public function allowStaticElements(): static
+    public function allowStaticElements(): self
     {
         $elements = array_merge(
             array_keys(W3CReference::HEAD_ELEMENTS),
@@ -146,8 +152,10 @@ class HtmlSanitizerConfig
      * Allows "safe" elements and attributes.
      *
      * All scripts will be removed, as well as other dangerous behaviors like CSS injection.
+     *
+     * @return static
      */
-    public function allowSafeElements(): static
+    public function allowSafeElements(): self
     {
         $attributes = [];
         foreach (W3CReference::ATTRIBUTES as $attribute => $isSafe) {
@@ -179,8 +187,9 @@ class HtmlSanitizerConfig
      * All other schemes will be dropped.
      *
      * @param list<string> $allowLinkSchemes
+     * @return static
      */
-    public function allowLinkSchemes(array $allowLinkSchemes): static
+    public function allowLinkSchemes(array $allowLinkSchemes): self
     {
         $clone = clone $this;
         $clone->allowedLinkSchemes = $allowLinkSchemes;
@@ -195,8 +204,9 @@ class HtmlSanitizerConfig
      * ($allowedLinkHosts = null).
      *
      * @param list<string>|null $allowLinkHosts
+     * @return static
      */
-    public function allowLinkHosts(?array $allowLinkHosts): static
+    public function allowLinkHosts(?array $allowLinkHosts): self
     {
         $clone = clone $this;
         $clone->allowedLinkHosts = $allowLinkHosts;
@@ -206,8 +216,9 @@ class HtmlSanitizerConfig
 
     /**
      * Allows relative URLs to be used in links href attributes.
+     * @return static
      */
-    public function allowRelativeLinks(bool $allowRelativeLinks = true): static
+    public function allowRelativeLinks(bool $allowRelativeLinks = true): self
     {
         $clone = clone $this;
         $clone->allowRelativeLinks = $allowRelativeLinks;
@@ -221,8 +232,9 @@ class HtmlSanitizerConfig
      * All other schemes will be dropped.
      *
      * @param list<string> $allowMediaSchemes
+     * @return static
      */
-    public function allowMediaSchemes(array $allowMediaSchemes): static
+    public function allowMediaSchemes(array $allowMediaSchemes): self
     {
         $clone = clone $this;
         $clone->allowedMediaSchemes = $allowMediaSchemes;
@@ -237,8 +249,9 @@ class HtmlSanitizerConfig
      * ($allowMediaHosts = null).
      *
      * @param list<string>|null $allowMediaHosts
+     * @return static
      */
-    public function allowMediaHosts(?array $allowMediaHosts): static
+    public function allowMediaHosts(?array $allowMediaHosts): self
     {
         $clone = clone $this;
         $clone->allowedMediaHosts = $allowMediaHosts;
@@ -248,8 +261,9 @@ class HtmlSanitizerConfig
 
     /**
      * Allows relative URLs to be used in media source attributes (img, audio, video, ...).
+     * @return static
      */
-    public function allowRelativeMedias(bool $allowRelativeMedias = true): static
+    public function allowRelativeMedias(bool $allowRelativeMedias = true): self
     {
         $clone = clone $this;
         $clone->allowRelativeMedias = $allowRelativeMedias;
@@ -259,8 +273,9 @@ class HtmlSanitizerConfig
 
     /**
      * Transforms URLs using the HTTP scheme to use the HTTPS scheme instead.
+     * @return static
      */
-    public function forceHttpsUrls(bool $forceHttpsUrls = true): static
+    public function forceHttpsUrls(bool $forceHttpsUrls = true): self
     {
         $clone = clone $this;
         $clone->forceHttpsUrls = $forceHttpsUrls;
@@ -278,8 +293,9 @@ class HtmlSanitizerConfig
      * attributes are allowed on the element.
      *
      * @param list<string>|string $allowedAttributes
+     * @return static
      */
-    public function allowElement(string $element, array|string $allowedAttributes = []): static
+    public function allowElement(string $element, $allowedAttributes = []): self
     {
         $clone = clone $this;
 
@@ -301,8 +317,10 @@ class HtmlSanitizerConfig
      *
      * Blocked elements are elements the sanitizer should remove from the input, but retain
      * their children.
+     *
+     * @return static
      */
-    public function blockElement(string $element): static
+    public function blockElement(string $element): self
     {
         $clone = clone $this;
 
@@ -323,8 +341,10 @@ class HtmlSanitizerConfig
      * Note: when using an empty configuration, all unknown elements are dropped
      * automatically. This method let you drop elements that were allowed earlier
      * in the configuration, or explicitly drop some if you changed the default action.
+     *
+     * @return static
      */
-    public function dropElement(string $element): static
+    public function dropElement(string $element): self
     {
         $clone = clone $this;
         unset($clone->allowedElements[$element], $clone->blockedElements[$element]);
@@ -343,8 +363,9 @@ class HtmlSanitizerConfig
      * Passing "*" will allow all currently allowed elements to use this attribute.
      *
      * @param list<string>|string $allowedElements
+     * @return static
      */
-    public function allowAttribute(string $attribute, array|string $allowedElements): static
+    public function allowAttribute(string $attribute, $allowedElements): self
     {
         $clone = clone $this;
         $allowedElements = ('*' === $allowedElements) ? array_keys($clone->allowedElements) : (array) $allowedElements;
@@ -376,8 +397,9 @@ class HtmlSanitizerConfig
      * in the configuration.
      *
      * @param list<string>|string $droppedElements
+     * @return static
      */
-    public function dropAttribute(string $attribute, array|string $droppedElements): static
+    public function dropAttribute(string $attribute, $droppedElements): self
     {
         $clone = clone $this;
         $droppedElements = ('*' === $droppedElements) ? array_keys($clone->allowedElements) : (array) $droppedElements;
@@ -395,8 +417,9 @@ class HtmlSanitizerConfig
      * Forcefully set the value of a given attribute on a given element.
      *
      * The attribute will be created on the nodes if it didn't exist.
+     * @return static
      */
-    public function forceAttribute(string $element, string $attribute, string $value): static
+    public function forceAttribute(string $element, string $attribute, string $value): self
     {
         $clone = clone $this;
         $clone->forcedAttributes[$element][$attribute] = $value;
@@ -406,8 +429,10 @@ class HtmlSanitizerConfig
 
     /**
      * Registers a custom attribute sanitizer.
+     *
+     * @return static
      */
-    public function withAttributeSanitizer(AttributeSanitizerInterface $sanitizer): static
+    public function withAttributeSanitizer(AttributeSanitizerInterface $sanitizer): self
     {
         $clone = clone $this;
         $clone->attributeSanitizers[] = $sanitizer;
@@ -417,8 +442,10 @@ class HtmlSanitizerConfig
 
     /**
      * Unregisters a custom attribute sanitizer.
+     *
+     * @return static
      */
-    public function withoutAttributeSanitizer(AttributeSanitizerInterface $sanitizer): static
+    public function withoutAttributeSanitizer(AttributeSanitizerInterface $sanitizer): self
     {
         $clone = clone $this;
         $clone->attributeSanitizers = array_values(array_filter(
@@ -432,8 +459,9 @@ class HtmlSanitizerConfig
     /**
      * @param int $maxInputLength The maximum length of the input string in bytes
      *                            -1 means no limit
+     * @return static
      */
-    public function withMaxInputLength(int $maxInputLength): static
+    public function withMaxInputLength(int $maxInputLength): self
     {
         if ($maxInputLength < -1) {
             throw new \InvalidArgumentException(\sprintf('The maximum input length must be greater than -1, "%d" given.', $maxInputLength));
@@ -450,7 +478,8 @@ class HtmlSanitizerConfig
         return $this->maxInputLength;
     }
 
-    public function getDefaultAction(): HtmlSanitizerAction
+    /** @return string&HtmlSanitizerAction::* */
+    public function getDefaultAction(): string
     {
         return $this->defaultAction;
     }

@@ -17,10 +17,12 @@ namespace Symfony\Component\HtmlSanitizer\Visitor\Node;
 final class BlockedNode implements NodeInterface
 {
     private array $children = [];
+    private NodeInterface $parentNode;
 
     public function __construct(
-        private NodeInterface $parentNode,
+        NodeInterface $parentNode
     ) {
+        $this->parentNode = $parentNode;
     }
 
     public function addChild(NodeInterface $node): void

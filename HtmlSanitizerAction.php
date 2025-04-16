@@ -11,20 +11,20 @@
 
 namespace Symfony\Component\HtmlSanitizer;
 
-enum HtmlSanitizerAction: string
+class HtmlSanitizerAction
 {
     /**
      * Dropped elements are elements the sanitizer should remove from the input, including their children.
      */
-    case Drop = 'drop';
+    public const Drop = 'drop';
 
     /**
      * Blocked elements are elements the sanitizer should remove from the input, but retain their children.
      */
-    case Block = 'block';
+    public const Block = 'block';
 
     /**
      * Allowed elements are elements the sanitizer should retain from the input.
      */
-    case Allow = 'allow';
+    public const Allow = 'allow';
 }
