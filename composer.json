@@ -1,5 +1,5 @@
 {
-    "name": "symfony/html-sanitizer",
+    "name": "webwingscz/html-sanitizer",
     "type": "library",
     "description": "Provides an object-oriented API to sanitize untrusted HTML input for safe insertion into a document's DOM.",
     "keywords": ["html", "sanitizer", "purifier"],
